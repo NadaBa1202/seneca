@@ -121,6 +121,32 @@ const LandingPage = ({ onChannelConnect }) => {
             </div>
             {error && <div className="error-message">{error}</div>}
           </form>
+          
+          {/* Demo Mode Section */}
+          <div className="demo-section">
+            <div className="demo-divider">
+              <span>or</span>
+            </div>
+            <div className="demo-info">
+              <h3>🎮 Try Demo Mode</h3>
+              <p>Experience the chat analysis features with simulated gaming chat data</p>
+              <button 
+                type="button" 
+                className="demo-button"
+                onClick={() => {
+                  onChannelConnect({
+                    name: 'Demo Gaming Stream',
+                    url: 'demo',
+                    connectedAt: new Date(),
+                    isDemo: true
+                  })
+                }}
+                disabled={isConnecting}
+              >
+                🚀 Start Demo Mode
+              </button>
+            </div>
+          </div>
         </div>
 
         

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './PlayerLookup.css'
 
 const PlayerLookup = () => {
@@ -6,8 +6,27 @@ const PlayerLookup = () => {
   const [playerData, setPlayerData] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [championNames, setChampionNames] = useState({})
 
   const PROXY_URL = 'http://localhost:3001'
+
+  // Load champion data for ID to name mapping
+  useEffect(() => {
+    const loadChampionNames = async () => {
+      try {
+        const response = await fetch('/dragontail/champion.json')
+        const data = await response.json()
+        const nameMap = {}
+        Object.values(data.data).forEach(champion => {
+          nameMap[champion.key] = champion.name
+        })
+        setChampionNames(nameMap)
+      } catch (error) {
+        console.error('Failed to load champion names:', error)
+      }
+    }
+    loadChampionNames()
+  }, [])
 
   const getRegionFromTag = (tagLine) => {
     const regionMap = {
@@ -86,10 +105,41 @@ const PlayerLookup = () => {
       const masteryData = masteryResponse.ok ? await masteryResponse.json() : { masteries: [], masteryScore: 0 }
 
       // Step 5: Get recent matches
-      const matchResponse = await fetch(`${PROXY_URL}/api/matches/${account.puuid}`)
-      const recentMatches = matchResponse.ok ? await matchResponse.json() : []
+      const matchResponse = await fetch(`${PROXY_URL}/api/matches/${account.puuid}/${region}`)
+      const matchIds = matchResponse.ok ? await matchResponse.json() : []
 
-      // Step 6: Check if currently in game
+      // Step 6: Get detailed match information for recent matches
+      const matchDetails = []
+      if (matchIds.length > 0) {
+        // Get details for the 3 most recent matches
+        for (const matchId of matchIds.slice(0, 3)) {
+          try {
+            const matchDetailResponse = await fetch(`${PROXY_URL}/api/match-details/${matchId}`)
+            if (matchDetailResponse.ok) {
+              const matchDetail = await matchDetailResponse.json()
+              // Find the player's data in the match
+              const participant = matchDetail.info.participants.find(p => p.puuid === account.puuid)
+              if (participant) {
+                matchDetails.push({
+                  matchId,
+                  champion: participant.championName,
+                  kills: participant.kills,
+                  deaths: participant.deaths,
+                  assists: participant.assists,
+                  win: participant.win,
+                  gameMode: matchDetail.info.gameMode,
+                  gameDuration: Math.floor(matchDetail.info.gameDuration / 60), // Convert to minutes
+                  gameCreation: new Date(matchDetail.info.gameCreation)
+                })
+              }
+            }
+          } catch (error) {
+            console.error(`Failed to fetch details for match ${matchId}:`, error)
+          }
+        }
+      }
+
+      // Step 7: Check if currently in game
       const currentGameResponse = await fetch(`${PROXY_URL}/api/current-game/${account.puuid}/${region}`)
       const currentGame = currentGameResponse.ok ? await currentGameResponse.json() : null
 
@@ -99,7 +149,7 @@ const PlayerLookup = () => {
         rankedInfo,
         masteries: masteryData.masteries,
         masteryScore: masteryData.masteryScore,
-        recentMatches,
+        recentMatches: matchDetails,
         currentGame
       })
 
@@ -204,7 +254,9 @@ const PlayerLookup = () => {
                   <h5>Top Champions:</h5>
                   {playerData.masteries.map((mastery, index) => (
                     <div key={index} className="mastery-entry">
-                      <span className="champion-id">Champion {mastery.championId}</span>
+                      <span className="champion-name">
+                        {championNames[mastery.championId] || `Champion ${mastery.championId}`}
+                      </span>
                       <span className="mastery-level">Level {mastery.championLevel}</span>
                       <span className="mastery-points">{mastery.championPoints.toLocaleString()} points</span>
                     </div>
@@ -217,11 +269,28 @@ const PlayerLookup = () => {
               <h4>📊 Recent Activity</h4>
               <div className="recent-matches">
                 <p>Recent Matches: {playerData.recentMatches.length}</p>
-                {playerData.recentMatches.slice(0, 3).map((matchId, index) => (
-                  <div key={index} className="match-entry">
-                    <span className="match-id">{matchId}</span>
-                  </div>
-                ))}
+                {playerData.recentMatches.length > 0 ? (
+                  playerData.recentMatches.map((match, index) => (
+                    <div key={index} className={`match-entry ${match.win ? 'win' : 'loss'}`}>
+                      <div className="match-main-info">
+                        <span className="match-champion">{match.champion}</span>
+                        <span className={`match-result ${match.win ? 'win' : 'loss'}`}>
+                          {match.win ? 'Victory' : 'Defeat'}
+                        </span>
+                      </div>
+                      <div className="match-details">
+                        <span className="match-kda">{match.kills}/{match.deaths}/{match.assists}</span>
+                        <span className="match-duration">{match.gameDuration}m</span>
+                        <span className="match-mode">{match.gameMode}</span>
+                      </div>
+                      <div className="match-time">
+                        {match.gameCreation.toLocaleDateString()}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p>No recent matches found</p>
+                )}
               </div>
             </div>
           </div>

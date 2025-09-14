@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import LandingPage from './components/LandingPage'
 import Dashboard from './components/Dashboard'
-import Chatbot from './components/Chatbot'
+// import Chatbot from './components/Chatbot'
 import LeagueFeaturesV2 from './components/LeagueFeaturesV2'
 import TestDragontailData from './components/TestDragontailData'
 import './App.css'
@@ -48,7 +48,7 @@ function App() {
       ) : currentView === 'test' ? (
         <TestDragontailData onBack={handleBackToDashboard} />
       ) : null}
-      <Chatbot />
+      {/* <Chatbot /> */}
     </div>
   )
 }

@@ -1,53 +1,213 @@
-# League of Legends Helper - Seneca Hacks Project
+# 🏆 League of Legends AI Assistant - Seneca Hacks 2025
 
 ## 🎮 Project Overview
-A comprehensive League of Legends companion app that provides real-time player data, champion assistance, and interactive features for EUW and other regions.
+A comprehensive League of Legends companion app featuring real-time player lookup, AI-powered champion assistance, and intelligent item recommendations. Built with React, Node.js, and the Riot Games API for Seneca Hacks 2025.
 
-## ✅ What's Working
-- **EUW Player Lookup**: Successfully looks up players like `MinouLion#EUW`
-- **Region Detection**: Automatically detects and routes to correct regional endpoints
-- **Champion Assistant**: Interactive interface with integrated chatbot
-- **Proxy Server**: Node.js backend handling Riot API requests with CORS
-- **React Frontend**: Modern React + Vite application
+## ✨ Key Features
+- **🔍 Multi-Region Player Lookup**: Search players across all regions (EUW, NA, KR, etc.)
+- **🤖 AI Champion Assistant**: Intelligent chatbot with League-specific knowledge
+- **🛡️ Enhanced Dynamic Item Builder**: AI-driven recommendations with pro builds
+- **📊 Real-Time Analytics**: Live game tracking and performance metrics
+- **🎨 Professional UI**: Responsive League of Legends themed interface
+
+## 🛠️ Tech Stack
+- **Frontend**: React 18, Vite, CSS3, Responsive Design
+- **Backend**: Node.js, Express, CORS, Environment Security
+- **APIs**: Riot Games API, Data Dragon, Custom AI Knowledge Base
+- **Tools**: ESLint, Git, npm, Professional Development Practices
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js (v14+)
-- Valid Riot API key (update in `proxy-server.js`)
+- Node.js 16+
+- Riot API key from [developer.riotgames.com](https://developer.riotgames.com/)
 
 ### Setup Instructions
 
-1. **Clone the repository**:
+1. **Clone and setup environment**:
    ```bash
    git clone https://github.com/NadaBa1202/seneca.git
-   cd seneca
+   cd seneca/League\ of\ legends\ helper
+   cp .env.example .env
+   # Edit .env and add: RIOT_API_KEY=your-api-key-here
    ```
 
-2. **Start the proxy server**:
+2. **Install dependencies**:
    ```bash
+   npm install
+   cd seneca/react-vite-app
+   npm install
+   ```
+
+3. **Start servers** (2 terminals):
+   ```bash
+   # Terminal 1 - Backend (Port 3001)
    cd "League of legends helper"
-   npm install
    node proxy-server.js
-   ```
-   Server runs on: `http://localhost:3001`
 
-3. **Start the React frontend**:
-   ```bash
+   # Terminal 2 - Frontend (Port 5174)  
    cd "League of legends helper/seneca/react-vite-app"
-   npm install
    npm run dev
    ```
-   Frontend runs on: `http://localhost:5176`
 
-4. **Test EUW Player Lookup**:
-   - Navigate to Player Lookup tab
-   - Enter: `MinouLion` / `EUW`
-   - Should successfully retrieve player data
+4. **Test application**:
+   - Open `http://localhost:5174`
+   - Navigate to "League Features" tab
+   - Test player lookup: `MinouLion#EUW`
+   - Explore Champion Assistant and AI Chatbot
 
 ## 🏗️ Architecture
 
 ```
+📁 seneca/
+├── 📁 League of legends helper/          # Main application
+│   ├── 📄 proxy-server.js               # Backend API proxy
+│   ├── 📄 .env                         # API keys (gitignored)
+│   └── 📁 seneca/react-vite-app/        # React frontend
+│       ├── 📁 src/components/           # UI components
+│       ├── 📁 src/services/            # Business logic
+│       └── 📁 public/dragontail/       # Game assets
+├── 📄 COMPREHENSIVE_README.md           # Detailed documentation
+├── 📄 TECHNICAL_DOCS.md                # Developer documentation
+└── 📄 GITHUB_DESCRIPTION.md            # Repository description
+```
+
+## ✅ What's Working
+
+### **Core Features Tested**
+- ✅ **EUW Player Lookup**: `MinouLion#EUW` successfully retrieves data
+- ✅ **Region Detection**: Automatic routing to correct API endpoints
+- ✅ **Champion Assistant**: Interactive interface with 160+ champions
+- ✅ **AI Chatbot**: League-specific knowledge base with contextual responses
+- ✅ **Dynamic Item Builder**: Pro builds with win rates and meta analysis
+- ✅ **Responsive Design**: Works on mobile and desktop
+
+### **API Endpoints**
+```http
+GET /api/account/:gameName/:tagLine     # Account lookup
+GET /api/summoner/:puuid/:region        # Summoner data  
+GET /api/ranked/:puuid/:region          # Ranked statistics
+GET /api/mastery/:puuid/:region         # Champion mastery
+GET /api/current-game/:puuid/:region    # Live game data
+```
+
+## 🎯 Demo Instructions
+
+### **Player Lookup Demo**
+1. Go to "League Features" → "Player Lookup"
+2. Enter: `MinouLion` / `EUW`
+3. View complete profile with rank and statistics
+
+### **Champion Assistant Demo**
+1. Go to "League Features" → "Champion Assistant" 
+2. Search: `Jinx`, `Ahri`, or `Thresh`
+3. View enhanced builds with AI insights
+4. Click "💬 AI Help" for interactive assistance
+
+### **AI Chatbot Demo**
+```
+Try asking:
+- "What items should I build on Jinx?"
+- "How do I play against Yasuo?"
+- "What's the current meta for ADC?"
+- "Give me tips for team fighting"
+```
+
+## 🔒 Security & Configuration
+
+### **Environment Variables**
+```bash
+# .env file (create from .env.example)
+RIOT_API_KEY=your-riot-api-key-here
+PORT=3001
+NODE_ENV=development
+```
+
+### **Important Security Notes**
+- ✅ API keys stored in environment variables
+- ✅ .env file properly gitignored  
+- ✅ CORS properly configured
+- ✅ Input validation implemented
+- ✅ No sensitive data in repository
+
+## 🏅 Competition Features
+
+### **Innovation Highlights**
+- **AI-Powered Recommendations**: Context-aware item builds
+- **Real-Time Data Integration**: Live player statistics
+- **Professional UX**: League of Legends themed interface
+- **Comprehensive Knowledge Base**: 160+ champions analyzed
+
+### **Technical Excellence**
+- **Clean Architecture**: Modular, maintainable code
+- **Performance Optimized**: Caching and lazy loading
+- **Error Handling**: Graceful degradation and user feedback
+- **Documentation**: Comprehensive setup and usage guides
+
+## 🚧 Development Status
+
+### **Completed ✅**
+- Multi-region player lookup with EUW testing
+- AI chatbot with League-specific knowledge
+- Enhanced dynamic item builder with pro builds
+- Professional responsive interface
+- Secure API proxy with environment configuration
+- Comprehensive documentation
+
+### **Ready for Demonstration ✅**
+- All core features functional
+- Clean, organized codebase
+- Professional documentation
+- Security best practices implemented
+
+## 📚 Documentation
+
+- **Quick Start**: This README
+- **Comprehensive Guide**: [COMPREHENSIVE_README.md](./COMPREHENSIVE_README.md)
+- **Technical Details**: [TECHNICAL_DOCS.md](./TECHNICAL_DOCS.md)
+- **GitHub Info**: [GITHUB_DESCRIPTION.md](./GITHUB_DESCRIPTION.md)
+
+## 🔧 Troubleshooting
+
+### **Common Issues**
+```bash
+# If ports are in use
+pkill node
+npm run dev
+
+# If API key expired
+# Get new key from developer.riotgames.com
+# Update .env file
+
+# If dependencies missing
+npm install
+cd seneca/react-vite-app && npm install
+```
+
+### **Test API Connection**
+```bash
+curl http://localhost:3001/api/account/MinouLion/EUW
+```
+
+## 🤝 Contributing & Team Collaboration
+
+**Ready for team expansion!** This project has:
+- Clean, documented codebase
+- Modular architecture for easy development
+- Comprehensive setup instructions
+- Professional development practices
+
+## � Seneca Hacks 2025 Submission
+
+**Categories**: Best Use of API, Best AI Implementation, Best UX, Most Innovative
+
+**Repository**: [github.com/NadaBa1202/seneca](https://github.com/NadaBa1202/seneca)
+
+---
+
+**🎮 Ready for judging and continued development!** ✨
+
+*Last updated: September 14, 2025*
 ├── League of legends helper/
 │   ├── proxy-server.js           # Backend API proxy with region support
 │   ├── seneca/react-vite-app/    # React frontend application

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import LeagueDataService from '../services/LeagueDataService'
-import DynamicItemService from '../services/DynamicItemService'
-import Chatbot from './Chatbot'
+import EnhancedDynamicItemService from '../services/EnhancedDynamicItemService'
+import AIChatbot from './AIChatbot'
 import './ChampionAssistant.css'
 
 const ChampionAssistant = () => {
@@ -13,9 +13,10 @@ const ChampionAssistant = () => {
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [dynamicBuilds, setDynamicBuilds] = useState(null)
   const [buildLoading, setBuildLoading] = useState(false)
+  const [showChatbot, setShowChatbot] = useState(false)
   const searchRef = useRef(null)
   const dataService = new LeagueDataService()
-  const itemService = new DynamicItemService()
+  const itemService = new EnhancedDynamicItemService()
 
   const loadChampions = async () => {
     try {
@@ -51,12 +52,40 @@ const ChampionAssistant = () => {
     try {
       setLoading(true)
       setBuildLoading(true)
+      setSelectedChampion(null) // Clear previous champion
+      
+      console.log('Loading champion:', championId)
       const champion = await dataService.getChampion(championId)
+      console.log('Champion loaded successfully:', champion.name)
+      
       const championName = champion.name || championId
       
-      // Load dynamic item builds
-      const builds = await itemService.getDynamicBuildRecommendations(champion)
-      setDynamicBuilds(builds)
+      // Load enhanced dynamic item builds with AI insights
+      const gameContext = {
+        gameMode: 'ranked',
+        role: 'default',
+        gameLength: 'normal',
+        enemyTeam: [],
+        allyTeam: [],
+        gameState: 'even',
+        playerSkill: 'average'
+      }
+      
+      console.log('Loading builds for:', championName)
+      const builds = await itemService.getIntelligentBuildRecommendations(champion, gameContext)
+      
+      // Validate and sanitize builds data
+      const sanitizedBuilds = {
+        core: Array.isArray(builds?.core) ? builds.core : ['No core items available'],
+        starter: Array.isArray(builds?.starter) ? builds.starter : ['No starter items available'],
+        boots: builds?.boots || 'No boots specified',
+        situational: builds?.situational || {},
+        lateGame: Array.isArray(builds?.lateGame) ? builds.lateGame : ['No late game items available'],
+        ...builds // Keep other properties
+      }
+      
+      console.log('Sanitized builds:', sanitizedBuilds)
+      setDynamicBuilds(sanitizedBuilds)
       setBuildLoading(false)
       
       // Enhanced champion data with tips and strategies
@@ -72,8 +101,24 @@ const ChampionAssistant = () => {
       setSearchTerm(champion.name)
       setShowSuggestions(false)
       setLoading(false)
+      console.log('Champion selection completed successfully')
+      
     } catch (error) {
       console.error('Error loading champion:', error)
+      // Don't break the UI, just show an error state
+      setSelectedChampion({
+        id: championId,
+        name: championId,
+        title: 'Champion not found',
+        error: error.message,
+        playTips: ['Unable to load champion data'],
+        counterTips: ['Please try another champion'],
+        itemBuilds: { standard: { core: ['Data unavailable'], boots: 'N/A', situational: [] } },
+        teamComps: ['Unable to load team composition data']
+      })
+      setDynamicBuilds(null)
+      setSearchTerm('')
+      setShowSuggestions(false)
       setLoading(false)
       setBuildLoading(false)
     }
@@ -396,14 +441,22 @@ const ChampionAssistant = () => {
                     <div className="build-path">
                       <h4>🚀 Starter Items</h4>
                       <div className="build-items">
-                        <div className="items">{dynamicBuilds.starter.join(', ')}</div>
+                        <div className="items">
+                          {Array.isArray(dynamicBuilds.starter) 
+                            ? dynamicBuilds.starter.join(', ') 
+                            : 'Loading starter items...'}
+                        </div>
                       </div>
                     </div>
                     
                     <div className="build-path">
                       <h4>⚡ Core Build</h4>
                       <div className="build-items">
-                        <div className="items">{dynamicBuilds.core.join(' → ')}</div>
+                        <div className="items">
+                          {Array.isArray(dynamicBuilds.core) 
+                            ? dynamicBuilds.core.join(' → ') 
+                            : 'Loading core build...'}
+                        </div>
                       </div>
                     </div>
                     
@@ -411,11 +464,21 @@ const ChampionAssistant = () => {
                       <h4>👟 Boots Options</h4>
                       <div className="build-items">
                         <div className="items">
-                          <strong>{dynamicBuilds.boots.standard}</strong>
-                          {dynamicBuilds.boots.alternatives && (
-                            <span className="alternatives">
-                              {' '} (Alt: {dynamicBuilds.boots.alternatives.join(', ')})
-                            </span>
+                          {dynamicBuilds.boots ? (
+                            <>
+                              <strong>
+                                {typeof dynamicBuilds.boots === 'string' 
+                                  ? dynamicBuilds.boots 
+                                  : dynamicBuilds.boots.standard || 'Situational'}
+                              </strong>
+                              {Array.isArray(dynamicBuilds.boots?.alternatives) && (
+                                <span className="alternatives">
+                                  {' '} (Alt: {dynamicBuilds.boots.alternatives.join(', ')})
+                                </span>
+                              )}
+                            </>
+                          ) : (
+                            'Loading boots options...'
                           )}
                         </div>
                       </div>
@@ -424,43 +487,61 @@ const ChampionAssistant = () => {
                     <div className="build-path">
                       <h4>🎯 Situational Items</h4>
                       <div className="situational-builds">
-                        {Object.entries(dynamicBuilds.situational).map(([situation, items]) => (
-                          <div key={situation} className="situation-category">
-                            <span className="situation-label">{situation.charAt(0).toUpperCase() + situation.slice(1)}:</span>
-                            <div className="items">{items.join(', ')}</div>
-                          </div>
-                        ))}
+                        {dynamicBuilds.situational && typeof dynamicBuilds.situational === 'object' ? (
+                          Object.entries(dynamicBuilds.situational).map(([situation, items]) => (
+                            <div key={situation} className="situation-category">
+                              <span className="situation-label">{situation.charAt(0).toUpperCase() + situation.slice(1)}:</span>
+                              <div className="items">
+                                {Array.isArray(items) ? items.join(', ') : 'No items available'}
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <div className="items">Loading situational items...</div>
+                        )}
                       </div>
                     </div>
                     
                     <div className="build-path">
                       <h4>🏆 Late Game</h4>
                       <div className="build-items">
-                        <div className="items">{dynamicBuilds.lateGame.join(', ')}</div>
+                        <div className="items">
+                          {Array.isArray(dynamicBuilds.lateGame) 
+                            ? dynamicBuilds.lateGame.join(', ') 
+                            : 'Loading late game items...'}
+                        </div>
                       </div>
                     </div>
                   </div>
                 ) : (
                   <div className="fallback-builds">
-                    {Object.entries(selectedChampion.itemBuilds).map(([role, build]) => (
-                      <div key={role} className="build-role">
-                        <h4>{role.charAt(0).toUpperCase() + role.slice(1)}</h4>
-                        <div className="build-items">
-                          <div className="item-category">
-                            <span className="category-label">Core Items:</span>
-                            <div className="items">{build.core.join(', ')}</div>
-                          </div>
-                          <div className="item-category">
-                            <span className="category-label">Boots:</span>
-                            <div className="items">{build.boots}</div>
-                          </div>
-                          <div className="item-category">
-                            <span className="category-label">Situational:</span>
-                            <div className="items">{build.situational.join(', ')}</div>
+                    {selectedChampion.itemBuilds && typeof selectedChampion.itemBuilds === 'object' ? (
+                      Object.entries(selectedChampion.itemBuilds).map(([role, build]) => (
+                        <div key={role} className="build-role">
+                          <h4>{role.charAt(0).toUpperCase() + role.slice(1)}</h4>
+                          <div className="build-items">
+                            <div className="item-category">
+                              <span className="category-label">Core Items:</span>
+                              <div className="items">
+                                {Array.isArray(build.core) ? build.core.join(', ') : 'No core items available'}
+                              </div>
+                            </div>
+                            <div className="item-category">
+                              <span className="category-label">Boots:</span>
+                              <div className="items">{build.boots || 'No boots specified'}</div>
+                            </div>
+                            <div className="item-category">
+                              <span className="category-label">Situational:</span>
+                              <div className="items">
+                                {Array.isArray(build.situational) ? build.situational.join(', ') : 'No situational items available'}
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      ))
+                    ) : (
+                      <div className="no-builds">No build information available</div>
+                    )}
                   </div>
                 )}
               </div>
@@ -504,8 +585,22 @@ const ChampionAssistant = () => {
         </div>
       )}
 
-      {/* AI Chatbot Integration */}
-      <Chatbot selectedChampion={selectedChampion} />
+      {/* AI Chatbot Toggle Button */}
+      <button 
+        className="chatbot-toggle"
+        onClick={() => setShowChatbot(!showChatbot)}
+        title="Open AI Assistant"
+      >
+        💬 AI Help
+      </button>
+
+      {/* Enhanced AI Chatbot */}
+      {showChatbot && (
+        <AIChatbot 
+          champion={selectedChampion}
+          onClose={() => setShowChatbot(false)}
+        />
+      )}
     </div>
   )
 }

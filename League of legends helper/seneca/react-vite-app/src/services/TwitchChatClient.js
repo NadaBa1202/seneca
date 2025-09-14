@@ -80,30 +80,57 @@ class TwitchChatClient {
 
     this.demoRunning = true
     const demoMessages = [
-      { username: 'ChatViewer1', message: 'Great stream! Love the gameplay!' },
-      { username: 'ToxicUser', message: 'This is terrible, you suck at this game' },
-      { username: 'RegularViewer', message: 'What keyboard are you using?' },
-      { username: 'Supporter', message: 'Amazing content as always! Keep it up!' },
-      { username: 'Hater123', message: 'Worst streamer ever, unsubbing' },
-      { username: 'NewViewer', message: 'Just followed! Excited to watch more' },
-      { username: 'ChatMod', message: 'Please keep chat respectful everyone' },
-      { username: 'FanBoy', message: 'You are the best streamer on Twitch!' },
-      { username: 'CriticalViewer', message: 'The audio quality could be better' },
-      { username: 'PositiveVibes', message: 'This made my day, thank you for streaming!' }
+      // Positive gaming messages
+      { username: 'ProGamer2024', message: 'That combo was absolutely insane! You\'re a legend!' },
+      { username: 'LeagueExpert', message: 'Perfect positioning in that teamfight, well played!' },
+      { username: 'SupportMain', message: 'Your vision control is on point this game' },
+      { username: 'RankClimber', message: 'Can you share your build path? Looking to improve my gameplay' },
+      { username: 'ViewerFan', message: 'This is the best educational stream I\'ve watched!' },
+      { username: 'ChatModerator', message: 'Great calls everyone, let\'s keep the positive energy!' },
+      
+      // Neutral/informational messages
+      { username: 'NewViewer123', message: 'What rank are you currently? Just started watching' },
+      { username: 'CasualPlayer', message: 'Which champion would you recommend for beginners?' },
+      { username: 'RegularWatcher', message: 'What\'s your favorite role to play in ranked?' },
+      { username: 'LearningJungle', message: 'Could you explain your jungle path for this game?' },
+      { username: 'ChatHelper', message: 'For new viewers: streamer is currently Diamond 2' },
+      
+      // Slightly negative but constructive
+      { username: 'CriticalViewer', message: 'You could have played that fight more defensively' },
+      { username: 'AnalyticalFan', message: 'I think rushing that item might not be optimal here' },
+      { username: 'HonestFeedback', message: 'Your macro play is good but mechanics need work' },
+      
+      // Toxic messages (realistic but mild for demo)
+      { username: 'TrollUser42', message: 'This gameplay is trash, uninstall the game' },
+      { username: 'FlameWarrior', message: 'Worst ADC I\'ve ever seen, you\'re hardstuck for a reason' },
+      { username: 'ToxicViewer', message: 'Stop feeding and maybe you\'ll win a game' },
+      
+      // Enthusiastic gaming content
+      { username: 'HypeViewer', message: 'POGGERS that outplay was incredible!!!' },
+      { username: 'EmoteSpammer', message: 'Kappa Kappa Kappa that baron steal tho' },
+      { username: 'SkillWatcher', message: 'Your Yasuo mechanics are getting so much better!' },
+      { username: 'TeamFightFan', message: 'Late game teamfights are always so intense!' },
+      { username: 'MetaDiscussion', message: 'What do you think about the new patch changes?' },
+      
+      // Engaging questions
+      { username: 'InteractiveViewer', message: 'Should we group for dragon or split push?' },
+      { username: 'StrategyFan', message: 'Why did you choose that rune setup for this matchup?' },
+      { username: 'ItemBuildCurious', message: 'When do you build defensive items vs full damage?' }
     ]
 
     let messageIndex = 0
     const sendDemoMessage = () => {
       if (!this.demoRunning) return // Stop if demo was stopped
 
-      if (this.messageCallback && messageIndex < demoMessages.length) {
-        const demo = demoMessages[messageIndex]
+      if (this.messageCallback) {
+        // Randomly select from different message types for variety
+        const randomMessage = demoMessages[Math.floor(Math.random() * demoMessages.length)]
         const messageData = {
-          username: demo.username,
-          message: demo.message,
+          username: randomMessage.username,
+          message: randomMessage.message,
           userId: `demo_${messageIndex}`,
           color: '#' + Math.floor(Math.random()*16777215).toString(16),
-          badges: null,
+          badges: Math.random() > 0.7 ? { subscriber: '1' } : null, // Some users have badges
           emotes: null,
           timestamp: new Date()
         }
@@ -111,17 +138,23 @@ class TwitchChatClient {
         this.messageCallback(messageData)
         messageIndex++
         
-        // Schedule next message
-        this.demoInterval = setTimeout(sendDemoMessage, Math.random() * 3000 + 1000) // 1-4 seconds
-      } else {
-        // Reset and continue loop
-        messageIndex = 0
-        this.demoInterval = setTimeout(sendDemoMessage, Math.random() * 5000 + 2000) // 2-7 seconds
+        // Variable timing for more realistic chat flow
+        let nextDelay
+        if (Math.random() > 0.8) {
+          // Burst of messages (teamfight moment)
+          nextDelay = Math.random() * 500 + 300 // 300-800ms
+        } else {
+          // Normal chat flow
+          nextDelay = Math.random() * 4000 + 1500 // 1.5-5.5 seconds
+        }
+        
+        this.demoInterval = setTimeout(sendDemoMessage, nextDelay)
       }
     }
 
     // Start demo messages after a short delay
-    this.demoInterval = setTimeout(sendDemoMessage, 2000)
+    console.log('Starting demo chat messages...')
+    this.demoInterval = setTimeout(sendDemoMessage, 1000)
   }
 
   stopDemoMessages() {

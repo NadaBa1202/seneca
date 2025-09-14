@@ -564,3 +564,43 @@
   border-radius: 10px;
   padding: 1.5rem;
 }
+
+/* AI Chatbot Toggle Button */
+.chatbot-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #C89B3C, #F0E6D2);
+  color: #0F2027;
+  border: none;
+  padding: 16px 24px;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(200, 155, 60, 0.4);
+  transition: all 0.3s ease;
+  z-index: 999;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.chatbot-toggle:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 35px rgba(200, 155, 60, 0.6);
+  background: linear-gradient(135deg, #F0E6D2, #C8AA6E);
+}
+
+.chatbot-toggle:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+/* Responsive design for chatbot toggle */
+@media (max-width: 768px) {
+  .chatbot-toggle {
+    bottom: 15px;
+    right: 15px;
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+}

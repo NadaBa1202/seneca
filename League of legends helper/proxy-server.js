@@ -228,9 +228,52 @@ app.get('/api/mastery/:puuid', async (req, res) => {
 });
 
 // Get recent matches by PUUID
+app.get('/api/matches/:puuid/:region', async (req, res) => {
+  try {
+    const { puuid, region } = req.params;
+    
+    // Determine the correct routing platform based on region
+    let routingPlatform = 'americas';
+    if (region) {
+      const lowerRegion = region.toLowerCase();
+      if (['euw1', 'eune', 'tr1', 'ru'].includes(lowerRegion)) {
+        routingPlatform = 'europe';
+      } else if (['kr', 'jp1'].includes(lowerRegion)) {
+        routingPlatform = 'asia';
+      }
+    }
+    
+    console.log(`🔍 Fetching matches for PUUID: ${puuid.substring(0, 20)}... using ${routingPlatform} routing`);
+    
+    const response = await fetch(
+      `https://${routingPlatform}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?count=5`,
+      {
+        headers: {
+          'X-Riot-Token': API_KEY
+        }
+      }
+    );
+    
+    if (!response.ok) {
+      console.log(`❌ Matches API returned ${response.status}: ${response.statusText}`);
+      return res.status(200).json([]);
+    }
+    
+    const data = await response.json();
+    console.log(`✅ Found ${data.length} matches`);
+    res.json(data);
+  } catch (error) {
+    console.error('Matches lookup error:', error);
+    res.status(200).json([]);
+  }
+});
+
+// Keep the old endpoint for backward compatibility
 app.get('/api/matches/:puuid', async (req, res) => {
   try {
     const { puuid } = req.params;
+    console.log(`🔍 Fetching matches for PUUID: ${puuid.substring(0, 20)}... using americas routing (legacy)`);
+    
     const response = await fetch(
       `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?count=5`,
       {
@@ -241,14 +284,54 @@ app.get('/api/matches/:puuid', async (req, res) => {
     );
     
     if (!response.ok) {
+      console.log(`❌ Matches API returned ${response.status}: ${response.statusText}`);
       return res.status(200).json([]);
     }
     
     const data = await response.json();
+    console.log(`✅ Found ${data.length} matches`);
     res.json(data);
   } catch (error) {
     console.error('Matches lookup error:', error);
     res.status(200).json([]);
+  }
+});
+
+// Get detailed match information by match ID
+app.get('/api/match-details/:matchId', async (req, res) => {
+  try {
+    const { matchId } = req.params;
+    
+    // Determine routing platform from match ID
+    let routingPlatform = 'americas';
+    if (matchId.startsWith('EUW1_') || matchId.startsWith('EUN1_') || matchId.startsWith('TR1_') || matchId.startsWith('RU_')) {
+      routingPlatform = 'europe';
+    } else if (matchId.startsWith('KR_') || matchId.startsWith('JP1_')) {
+      routingPlatform = 'asia';
+    }
+    
+    console.log(`🔍 Fetching match details for ${matchId} using ${routingPlatform} routing`);
+    
+    const response = await fetch(
+      `https://${routingPlatform}.api.riotgames.com/lol/match/v5/matches/${matchId}`,
+      {
+        headers: {
+          'X-Riot-Token': API_KEY
+        }
+      }
+    );
+    
+    if (!response.ok) {
+      console.log(`❌ Match details API returned ${response.status}: ${response.statusText}`);
+      return res.status(404).json({ error: 'Match not found' });
+    }
+    
+    const data = await response.json();
+    console.log(`✅ Successfully fetched match details for ${matchId}`);
+    res.json(data);
+  } catch (error) {
+    console.error('Match details lookup error:', error);
+    res.status(500).json({ error: 'Failed to fetch match details' });
   }
 });
 

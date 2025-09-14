@@ -179,10 +179,30 @@ const Dashboard = ({ channelData, onBack, onLeagueFeatures, onDataTest }) => {
         })
       })
 
-      await chatClientRef.current.connect()
-      setIsConnected(true)
+      // For demo mode, don't try to connect to actual Twitch
+      if (channelData.isDemo) {
+        console.log('Starting demo mode...')
+        setIsConnected(true)
+        // Automatically start demo messages
+        setTimeout(() => {
+          chatClientRef.current.startDemoMessages()
+          setDemoRunning(true)
+        }, 1000)
+      } else {
+        await chatClientRef.current.connect()
+        setIsConnected(true)
+      }
     } catch (error) {
       console.error('Failed to connect to chat:', error)
+      // If in demo mode and real connection fails, still allow demo
+      if (channelData.isDemo) {
+        console.log('Real connection failed, continuing with demo mode')
+        setIsConnected(true)
+        setTimeout(() => {
+          chatClientRef.current.startDemoMessages()
+          setDemoRunning(true)
+        }, 1000)
+      }
     }
   }
 
@@ -394,7 +414,7 @@ const Dashboard = ({ channelData, onBack, onLeagueFeatures, onDataTest }) => {
           </div>
           <div className="stat-card">
             <span className="stat-value" style={{ color: '#a855f7' }}>
-              {advancedStats.uniqueUsers.size > 999 ? '999+' : advancedStats.uniqueUsers.size}
+              {advancedStats.uniqueUsers.size.toLocaleString()}
             </span>
             <span className="stat-label">Unique Users</span>
           </div>
@@ -486,7 +506,7 @@ const Dashboard = ({ channelData, onBack, onLeagueFeatures, onDataTest }) => {
             </div>
             <div className="stat-info">
               <div className="stat-title">Active Users</div>
-              <div className="stat-main-value">{Math.min(stats.total + 42, 999)}</div>
+              <div className="stat-main-value">{(stats.total + 42).toLocaleString()}</div>
               <div className="stat-change positive-change">+23%</div>
             </div>
           </div>

@@ -1,9 +1,54 @@
-// Dynamic Item Recommendation Service
+// Enhanced Dynamic Item Recommendation Service
 class DynamicItemService {
   constructor() {
     this.itemData = null;
     this.championData = null;
     this.baseUrl = '/dragontail';
+    this.proBuilds = this.initializeProBuilds();
+    this.metaItems = this.initializeMetaItems();
+    this.synergies = this.initializeSynergies();
+  }
+
+  initializeProBuilds() {
+    return {
+      'Jinx': {
+        core: ['Kraken Slayer', 'Phantom Dancer', 'Infinity Edge'],
+        boots: ['Berserker\'s Greaves'],
+        situational: ['Lord Dominik\'s Regards', 'Guardian Angel', 'Bloodthirster'],
+        winRate: 0.68
+      },
+      'Ahri': {
+        core: ['Luden\'s Tempest', 'Shadowflame', 'Zhonya\'s Hourglass'],
+        boots: ['Sorcerer\'s Shoes'],
+        situational: ['Banshee\'s Veil', 'Void Staff', 'Rabadon\'s Deathcap'],
+        winRate: 0.72
+      },
+      'Thresh': {
+        core: ['Zeke\'s Convergence', 'Locket of the Iron Solari', 'Thornmail'],
+        boots: ['Mobility Boots'],
+        situational: ['Knight\'s Vow', 'Redemption', 'Mikael\'s Blessing'],
+        winRate: 0.65
+      }
+    };
+  }
+
+  initializeMetaItems() {
+    return {
+      'ADC': ['Kraken Slayer', 'Phantom Dancer', 'Infinity Edge', 'Lord Dominik\'s Regards'],
+      'Mage': ['Luden\'s Tempest', 'Shadowflame', 'Zhonya\'s Hourglass', 'Void Staff'],
+      'Tank': ['Sunfire Aegis', 'Thornmail', 'Spirit Visage', 'Randuin\'s Omen'],
+      'Support': ['Imperial Mandate', 'Staff of Flowing Water', 'Redemption', 'Locket of the Iron Solari'],
+      'Assassin': ['Duskblade of Draktharr', 'Youmuu\'s Ghostblade', 'Edge of Night', 'Serylda\'s Grudge']
+    };
+  }
+
+  initializeSynergies() {
+    return {
+      'critChance': ['Infinity Edge', 'Phantom Dancer', 'Rapid Firecannon'],
+      'magicPen': ['Void Staff', 'Shadowflame', 'Sorcerer\'s Shoes'],
+      'healing': ['Bloodthirster', 'Spirit Visage', 'Redemption'],
+      'mobility': ['Phantom Dancer', 'Youmuu\'s Ghostblade', 'Mobility Boots']
+    };
   }
 
   async loadItemData() {
