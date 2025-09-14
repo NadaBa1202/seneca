@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 const API_BASE = 'http://localhost:3001';
-const API_KEY = 'RGAPI-30e37cb1-bf92-4d7e-8ea0-3aab8f28cf9e'; // Your API key
+const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your actual API key
 
 async function testApi() {
     try {

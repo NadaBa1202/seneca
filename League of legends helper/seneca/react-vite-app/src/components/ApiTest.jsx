@@ -8,7 +8,7 @@ const ApiTest = () => {
     try {
       const response = await fetch('https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/Doublelift/NA1', {
         headers: {
-          'X-Riot-Token': 'RGAPI-8994cf2c-4239-4033-b040-20e200c43151'
+          'X-Riot-Token': 'YOUR_API_KEY_HERE' // Replace with your actual API key
         }
       })
       

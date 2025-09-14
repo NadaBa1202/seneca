@@ -2,7 +2,7 @@ const axios = require('axios');
 
 class RiotApiService {
     constructor(apiKey = null) {
-        this.apiKey = apiKey || process.env.RIOT_API_KEY || 'RGAPI-8994cf2c-4239-4033-b040-20e200c43151';
+        this.apiKey = apiKey || process.env.RIOT_API_KEY || 'YOUR_API_KEY_HERE';
         this.baseUrls = {
             na1: 'https://na1.api.riotgames.com',
             americas: 'https://americas.api.riotgames.com',

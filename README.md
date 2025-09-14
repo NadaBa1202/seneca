@@ -97,18 +97,28 @@ A comprehensive League of Legends companion app that provides real-time player d
 
 ## 📝 Configuration
 
-### Riot API Key
-Update the API key in `League of legends helper/proxy-server.js`:
-```javascript
-const API_KEY = 'RGAPI-your-api-key-here';
-```
+### ⚠️ IMPORTANT: API Key Security
+**DO NOT** commit API keys to git! Follow these steps:
 
-### Environment Variables
-Create `.env` files for configuration:
-```bash
-RIOT_API_KEY=your_api_key
-PORT=3001
-```
+1. **Copy the environment template**:
+   ```bash
+   cd "League of legends helper"
+   cp .env.example .env
+   ```
+
+2. **Add your API key to .env**:
+   ```bash
+   RIOT_API_KEY=your-actual-api-key-here
+   PORT=3001
+   ```
+
+3. **Verify .env is in .gitignore** (it is!)
+
+### Riot API Key
+Get your API key from [Riot Developer Portal](https://developer.riotgames.com/)
+- Development keys expire after 24 hours
+- Never commit keys to version control
+- Use environment variables for production
 
 ## 🐛 Known Issues
 - Some large files excluded via .gitignore (models, datasets)

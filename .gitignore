@@ -61,6 +61,8 @@ temp/
 .env
 .env.local
 .env.production
+.env.development
+*.env
 
 # Cache directories
 .cache/

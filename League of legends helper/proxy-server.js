@@ -1,15 +1,22 @@
 const express = require('express');
 const cors = require('cors');
 const fetch = require('node-fetch');
+require('dotenv').config();
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 // Enable CORS for all routes
 app.use(cors());
 app.use(express.json());
 
-const API_KEY = 'RGAPI-8994cf2c-4239-4033-b040-20e200c43151';
+const API_KEY = process.env.RIOT_API_KEY;
+
+if (!API_KEY) {
+  console.error('❌ RIOT_API_KEY environment variable is required!');
+  console.error('Please create a .env file with: RIOT_API_KEY=your-api-key-here');
+  process.exit(1);
+}
 
 // Region mapping for different tag lines
 const getRegionFromTag = (tagLine) => {

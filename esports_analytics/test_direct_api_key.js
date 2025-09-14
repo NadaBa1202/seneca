@@ -2,7 +2,7 @@ const axios = require('axios');
 
 // Simple direct API test
 async function testRiotApiDirect() {
-    const API_KEY = 'RGAPI-8994cf2c-4239-4033-b040-20e200c43151';
+    const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with your actual API key
     
     console.log('🧪 Testing Riot API directly...\n');
     
