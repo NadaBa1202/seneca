@@ -1,9 +1,17 @@
-# 🏆 League of Legends AI Assistant - Seneca Hacks 2025
+# 🏆 League of Legends Gaming Analytics Platform - Seneca Hacks 2025
 
 ## 🎮 Project Overview
-A comprehensive League of Legends companion app featuring real-time player lookup, AI-powered champion assistance, and intelligent item recommendations. Built with React, Node.js, and the Riot Games API for Seneca Hacks 2025.
+A comprehensive gaming analytics platform combining real-time Twitch chat sentiment analysis with League of Legends data insights. Features AI-powered champion assistance, live chat monitoring, and intelligent gameplay recommendations. Built with React, Node.js, and multiple gaming APIs for Seneca Hacks 2025.
 
 ## ✨ Key Features
+
+### 🔴 Twitch Chat Analytics
+- **Real-time Chat Monitoring**: Connect to any Twitch channel instantly
+- **Sentiment Analysis**: AI-powered classification of positive, neutral, and toxic messages  
+- **Live Statistics**: Dynamic charts showing chat activity and sentiment distribution
+- **Message Feed**: Real-time display of chat messages with sentiment indicators
+
+### ⚔️ League of Legends Integration
 - **🔍 Multi-Region Player Lookup**: Search players across all regions (EUW, NA, KR, etc.)
 - **🤖 AI Champion Assistant**: Intelligent chatbot with League-specific knowledge
 - **🛡️ Enhanced Dynamic Item Builder**: AI-driven recommendations with pro builds
@@ -11,9 +19,10 @@ A comprehensive League of Legends companion app featuring real-time player looku
 - **🎨 Professional UI**: Responsive League of Legends themed interface
 
 ## 🛠️ Tech Stack
-- **Frontend**: React 18, Vite, CSS3, Responsive Design
-- **Backend**: Node.js, Express, CORS, Environment Security
-- **APIs**: Riot Games API, Data Dragon, Custom AI Knowledge Base
+- **Frontend**: React 18, Vite, CSS3, Chart.js, Responsive Design
+- **Backend**: Node.js, Express, CORS, WebSocket, Environment Security
+- **APIs**: Riot Games API, Twitch API, Data Dragon, Custom AI Knowledge Base
+- **Analytics**: Real-time sentiment analysis, Live data visualization
 - **Tools**: ESLint, Git, npm, Professional Development Practices
 
 ## 🚀 Quick Start
@@ -27,9 +36,8 @@ A comprehensive League of Legends companion app featuring real-time player looku
 1. **Clone and setup environment**:
    ```bash
    git clone https://github.com/NadaBa1202/seneca.git
-   cd seneca/League\ of\ legends\ helper
-   cp .env.example .env
-   # Edit .env and add: RIOT_API_KEY=your-api-key-here
+   cd "seneca/League of legends helper"
+   # Add your Riot API key to proxy-server.js
    ```
 
 2. **Install dependencies**:
@@ -45,7 +53,7 @@ A comprehensive League of Legends companion app featuring real-time player looku
    cd "League of legends helper"
    node proxy-server.js
 
-   # Terminal 2 - Frontend (Port 5174)  
+   # Terminal 2 - Frontend (Port 5179)  
    cd "League of legends helper/seneca/react-vite-app"
    npm run dev
    ```

@@ -70,10 +70,10 @@
   text-shadow: 0 0 10px rgba(196, 181, 253, 0.5);
 }
 
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
+.landing-page .features-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 1fr !important;
+  gap: 1.5rem;
   margin-bottom: 4rem;
 }
 
@@ -119,13 +119,12 @@
   filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.4));
 }
 
-.feature-card h3 {
-  color: #e879f9;
+.landing-page .feature-card h3 {
+  color: #e879f9 !important;
   font-size: 1.5rem;
   margin-bottom: 1rem;
   position: relative;
   z-index: 1;
-  text-shadow: 0 0 10px rgba(232, 121, 249, 0.3);
 }
 
 .feature-card p {
@@ -349,6 +348,11 @@
   
   .logo h1 {
     font-size: 2rem;
+  }
+  
+  .landing-page .features-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem;
   }
   
   .input-group {

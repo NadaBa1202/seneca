@@ -31,7 +31,7 @@ const LeagueFeatures = ({ onBack }) => {
             className={`tab-button ${activeTab === 'player-lookup' ? 'active' : ''}`}
             onClick={() => setActiveTab('player-lookup')}
           >
-            🔍 Player Lookup
+            👤 Player Lookup
           </button>
           <button 
             className={`tab-button ${activeTab === 'champion-assistant' ? 'active' : ''}`}
@@ -44,12 +44,6 @@ const LeagueFeatures = ({ onBack }) => {
             onClick={() => setActiveTab('item-builds')}
           >
             🛡️ Item Builds
-          </button>
-          <button 
-            className={`tab-button ${activeTab === 'league-chat' ? 'active' : ''}`}
-            onClick={() => setActiveTab('league-chat')}
-          >
-            � League Assistant
           </button>
         </div>
 
@@ -68,64 +62,104 @@ const LeagueFeatures = ({ onBack }) => {
           <div className="tab-content">
             <div className="item-builds-section">
               <div className="builds-header">
-                <h3>🛡️ Champion Item Builds & Recommendations</h3>
-                <p>Discover optimal item builds for different champion roles and game phases</p>
+                <h3>🛡️ Popular Item Builds</h3>
+                <p>Curated builds for every role and situation</p>
               </div>
               
-              <div className="build-categories">
+              <div className="builds-grid">
                 <div className="build-category">
-                  <h4>🗡️ AD Carry Builds</h4>
-                  <div className="build-examples">
-                    <div className="build-item">
-                      <strong>Jinx:</strong> Infinity Edge → Runaan's Hurricane → Bloodthirster → Guardian Angel
+                  <h4>🏹 ADC Builds</h4>
+                  <div className="build-item">
+                    <h5>Crit ADC</h5>
+                    <div className="item-list">
+                      <span className="item">Kraken Slayer</span>
+                      <span className="item">Phantom Dancer</span>
+                      <span className="item">Infinity Edge</span>
+                      <span className="item">Lord Dominik's</span>
                     </div>
-                    <div className="build-item">
-                      <strong>Vayne:</strong> Kraken Slayer → Wit's End → Infinity Edge → Guardian Angel
+                  </div>
+                  <div className="build-item">
+                    <h5>On-Hit ADC</h5>
+                    <div className="item-list">
+                      <span className="item">Wit's End</span>
+                      <span className="item">Guinsoo's</span>
+                      <span className="item">Blade of the Ruined King</span>
+                      <span className="item">Runaan's Hurricane</span>
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="build-category">
-                  <h4>🛡️ Tank Builds</h4>
-                  <div className="build-examples">
-                    <div className="build-item">
-                      <strong>Alistar:</strong> Locket of Iron Solari → Thornmail → Gargoyle Stoneplate → Warmog's
+                  <h4>⚔️ Mid Lane</h4>
+                  <div className="build-item">
+                    <h5>Burst Mage</h5>
+                    <div className="item-list">
+                      <span className="item">Luden's Tempest</span>
+                      <span className="item">Shadowflame</span>
+                      <span className="item">Zhonya's Hourglass</span>
+                      <span className="item">Void Staff</span>
                     </div>
-                    <div className="build-item">
-                      <strong>Malphite:</strong> Sunfire Aegis → Thornmail → Force of Nature → Randuin's Omen
+                  </div>
+                  <div className="build-item">
+                    <h5>Assassin</h5>
+                    <div className="item-list">
+                      <span className="item">Eclipse</span>
+                      <span className="item">Youmuu's Ghostblade</span>
+                      <span className="item">Edge of Night</span>
+                      <span className="item">Serylda's Grudge</span>
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="build-category">
-                  <h4>⚡ AP Carry Builds</h4>
-                  <div className="build-examples">
-                    <div className="build-item">
-                      <strong>Syndra:</strong> Luden's Tempest → Sorcerer's Shoes → Shadowflame → Rabadon's
+                  <h4>💪 Top Lane</h4>
+                  <div className="build-item">
+                    <h5>Tank</h5>
+                    <div className="item-list">
+                      <span className="item">Sunfire Aegis</span>
+                      <span className="item">Thornmail</span>
+                      <span className="item">Force of Nature</span>
+                      <span className="item">Gargoyle Stoneplate</span>
                     </div>
-                    <div className="build-item">
-                      <strong>Yasuo:</strong> Immortal Shieldbow → Berserker's Greaves → Infinity Edge → Death's Dance
+                  </div>
+                  <div className="build-item">
+                    <h5>Fighter</h5>
+                    <div className="item-list">
+                      <span className="item">Trinity Force</span>
+                      <span className="item">Sterak's Gage</span>
+                      <span className="item">Death's Dance</span>
+                      <span className="item">Guardian Angel</span>
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="build-category">
-                  <h4>🌿 Jungle Builds</h4>
-                  <div className="build-examples">
-                    <div className="build-item">
-                      <strong>Graves:</strong> Eclipse → Collector → Lord Dominik's → Guardian Angel
+                  <h4>🌟 Support</h4>
+                  <div className="build-item">
+                    <h5>Enchanter</h5>
+                    <div className="item-list">
+                      <span className="item">Moonstone Renewer</span>
+                      <span className="item">Staff of Flowing Water</span>
+                      <span className="item">Chemtech Putrifier</span>
+                      <span className="item">Redemption</span>
                     </div>
-                    <div className="build-item">
-                      <strong>Ammu:</strong> Sunfire Aegis → Demonic Embrace → Thornmail → Spirit Visage
+                  </div>
+                  <div className="build-item">
+                    <h5>Tank Support</h5>
+                    <div className="item-list">
+                      <span className="item">Locket of the Iron Solari</span>
+                      <span className="item">Frozen Heart</span>
+                      <span className="item">Knight's Vow</span>
+                      <span className="item">Zeke's Convergence</span>
                     </div>
                   </div>
                 </div>
               </div>
-              
+
               <div className="build-tips">
-                <h4>💡 Pro Tips</h4>
+                <h4>💡 Build Tips</h4>
                 <ul>
-                  <li>🎯 <strong>Early Game:</strong> Focus on core items that provide immediate power spikes</li>
+                  <li>🎯 <strong>Early Game:</strong> Focus on core items that give you power spikes</li>
                   <li>⚖️ <strong>Mid Game:</strong> Adapt your build based on enemy team composition</li>
                   <li>🛡️ <strong>Late Game:</strong> Consider defensive items to survive team fights</li>
                   <li>👁️ <strong>Vision:</strong> Don't forget Control Wards - they win games!</li>
@@ -134,76 +168,9 @@ const LeagueFeatures = ({ onBack }) => {
             </div>
           </div>
         )}
-
-        {/* League Assistant Chat Tab */}
-        {activeTab === 'league-chat' && (
-          <div className="tab-content">
-            <div className="league-chat-section">
-              <div className="chat-header">
-                <h3>💬 League of Legends AI Assistant</h3>
-                <p>Ask me anything about champions, strategies, builds, or gameplay tips!</p>
-              </div>
-              
-              <div className="chat-container">
-                <div className="chat-messages">
-                  <div className="ai-message">
-                    <div className="message-avatar">🤖</div>
-                    <div className="message-content">
-                      <p>Hello! I'm your League of Legends assistant. I can help you with:</p>
-                      <ul>
-                        <li>🎮 Champion strategies and tips</li>
-                        <li>🛡️ Item builds and recommendations</li>
-                        <li>⚔️ Matchup advice and counters</li>
-                        <li>🎯 Team composition suggestions</li>
-                        <li>📈 Gameplay improvement tips</li>
-                      </ul>
-                      <p>Try asking me something like: "How do I play Alistar as support?" or "What items should I build on Jinx?"</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="chat-examples">
-                  <h4>💡 Try these questions:</h4>
-                  <div className="example-questions">
-                    <button className="example-btn" onClick={() => handleExampleQuestion("How do I play Alistar effectively?")}>
-                      How do I play Alistar effectively?
-                    </button>
-                    <button className="example-btn" onClick={() => handleExampleQuestion("What's the best build for Jinx?")}>
-                      What's the best build for Jinx?
-                    </button>
-                    <button className="example-btn" onClick={() => handleExampleQuestion("How do I counter Yasuo?")}>
-                      How do I counter Yasuo?
-                    </button>
-                    <button className="example-btn" onClick={() => handleExampleQuestion("What are good team compositions?")}>
-                      What are good team compositions?
-                    </button>
-                  </div>
-                </div>
-                
-                <div className="chat-input-area">
-                  <div className="chat-input-group">
-                    <input
-                      type="text"
-                      placeholder="Ask me anything about League of Legends..."
-                      className="chat-input"
-                    />
-                    <button className="send-button">
-                      📤 Send
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   )
-
-  function handleExampleQuestion(question) {
-    // This will be implemented with actual AI responses
-    console.log('Example question clicked:', question)
-  }
 }
 
 export default LeagueFeatures

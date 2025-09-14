@@ -1,13 +1,36 @@
 {
-  "name": "react-vite-app",
+  "name": "league-gaming-analytics-frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Frontend for League of Legends Gaming Analytics Platform - React + Vite application with real-time chat monitoring and League analytics",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui"
+  },
+  "keywords": [
+    "react",
+    "vite",
+    "league-of-legends",
+    "gaming-analytics",
+    "twitch-chat",
+    "sentiment-analysis",
+    "real-time",
+    "esports"
+  ],
+  "author": "Seneca Hacks 2025 Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NadaBa1202/seneca.git"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=7.0.0"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

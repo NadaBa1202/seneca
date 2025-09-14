@@ -1,15 +1,35 @@
 {
-  "name": "league-of-legends-helper",
+  "name": "league-gaming-analytics-platform",
   "version": "1.0.0",
-  "main": "dragonhead.js",
+  "description": "League of Legends Gaming Analytics Platform with Twitch chat sentiment analysis and AI-powered champion assistance for Seneca Hacks 2025",
+  "main": "proxy-server.js",
   "scripts": {
+    "start": "node proxy-server.js",
+    "dev": "node proxy-server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "league-of-legends",
+    "gaming",
+    "analytics",
+    "twitch",
+    "sentiment-analysis",
+    "ai-assistant",
+    "riot-api",
+    "esports",
+    "seneca-hacks"
+  ],
+  "author": "Seneca Hacks 2025 Team",
+  "license": "MIT",
   "type": "commonjs",
-  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NadaBa1202/seneca.git"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=7.0.0"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
