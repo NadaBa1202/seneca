@@ -86,7 +86,7 @@ const Dashboard = ({ channelData, onBack, onLeagueFeatures, onDataTest }) => {
   useEffect(() => {
     setAdvancedStats(prev => ({
       ...prev,
-      averageMessageLength: prev.totalWords > 0 && stats.total > 0 ? 
+      averageMessageLength: prev.totalWords > 0 && stats.total > 0 ?
         Math.round(prev.totalWords / stats.total * 10) / 10 : 0
     }))
   }, [stats.total])
@@ -94,14 +94,14 @@ const Dashboard = ({ channelData, onBack, onLeagueFeatures, onDataTest }) => {
   const connectToChat = async () => {
     try {
       chatClientRef.current = new TwitchChatClient(channelData.name)
-      
+
       chatClientRef.current.onMessage((messageData) => {
         const sentimentResult = sentimentAnalyzer.current.analyzeSentiment(messageData.message)
-        
+
         // Debug logging
         console.log('Message:', messageData.message)
         console.log('Sentiment Result:', sentimentResult)
-        
+
         const enrichedMessage = {
           ...messageData,
           sentiment: sentimentResult.sentiment,
@@ -110,10 +110,10 @@ const Dashboard = ({ channelData, onBack, onLeagueFeatures, onDataTest }) => {
           timestamp: new Date(),
           id: Date.now() + Math.random()
         }
-        
+
         setMessages(prev => [...prev, enrichedMessage])
         setRecentMessages(prev => [enrichedMessage, ...prev.slice(0, 49)]) // Keep last 50
-        
+
         // Update emotion data
         if (sentimentResult.emotions) {
           setEmotionData(prev => {
@@ -126,7 +126,7 @@ const Dashboard = ({ channelData, onBack, onLeagueFeatures, onDataTest }) => {
             return newData
           })
         }
-        
+
         setStats(prev => {
           const newStats = {
             total: prev.total + 1,
@@ -136,34 +136,34 @@ const Dashboard = ({ channelData, onBack, onLeagueFeatures, onDataTest }) => {
             toxic: prev.toxic + (sentimentResult.sentiment === 'toxic' ? 1 : 0),
             messagesPerMinute: calculateMessagesPerMinute(prev.total + 1)
           }
-          
+
           console.log('Stats updated:', newStats)
           console.log('Sentiment was:', sentimentResult.sentiment)
           return newStats
         })
         // Update timeline
         updateTimeline(sentimentResult.sentiment)
-        
+
         // Update advanced statistics
         setAdvancedStats(prevAdvanced => {
           const newAdvanced = { ...prevAdvanced }
-          
+
           // Update most active users
           const userCount = newAdvanced.mostActiveUsers.get(enrichedMessage.username) || 0
           newAdvanced.mostActiveUsers.set(enrichedMessage.username, userCount + 1)
-          
+
           // Update unique users
           newAdvanced.uniqueUsers.add(enrichedMessage.username)
-          
+
           // Calculate average message length
           const wordCount = enrichedMessage.message.split(' ').length
           newAdvanced.totalWords += wordCount
-          
+
           // Update top emotions
           if (sentimentResult.emotions) {
             const topEmotion = Object.entries(sentimentResult.emotions)
               .reduce((max, [emotion, score]) => score > max.score ? { emotion, score } : max, { emotion: '', score: 0 })
-            
+
             if (topEmotion.score > 0.3) {
               const existingIndex = newAdvanced.topEmotions.findIndex(e => e.emotion === topEmotion.emotion)
               if (existingIndex >= 0) {
@@ -174,7 +174,7 @@ const Dashboard = ({ channelData, onBack, onLeagueFeatures, onDataTest }) => {
               newAdvanced.topEmotions.sort((a, b) => b.count - a.count).slice(0, 5)
             }
           }
-          
+
           return newAdvanced
         })
       })
@@ -193,28 +193,28 @@ const Dashboard = ({ channelData, onBack, onLeagueFeatures, onDataTest }) => {
 
   const updateTimeline = (sentiment) => {
     const now = new Date()
-    const timeLabel = now.toLocaleTimeString('en-US', { 
-      hour12: false, 
-      hour: '2-digit', 
-      minute: '2-digit' 
+    const timeLabel = now.toLocaleTimeString('en-US', {
+      hour12: false,
+      hour: '2-digit',
+      minute: '2-digit'
     })
-    
+
     setTimelineData(prev => {
       // Keep only last 20 data points
       const maxPoints = 20
-      
+
       let newLabels = [...prev.labels]
       let newDatasets = prev.datasets.map(dataset => ({ ...dataset, data: [...dataset.data] }))
-      
+
       // Add new time label if it doesn't exist
       if (!newLabels.includes(timeLabel)) {
         newLabels.push(timeLabel)
-        
+
         // Initialize all datasets with 0 for this time point
         newDatasets.forEach(dataset => {
           dataset.data.push(0)
         })
-        
+
         // Trim to max points
         if (newLabels.length > maxPoints) {
           newLabels = newLabels.slice(-maxPoints)
@@ -223,7 +223,7 @@ const Dashboard = ({ channelData, onBack, onLeagueFeatures, onDataTest }) => {
           })
         }
       }
-      
+
       // Increment the count for the current sentiment
       const currentIndex = newLabels.indexOf(timeLabel)
       if (currentIndex !== -1) {
@@ -233,12 +233,12 @@ const Dashboard = ({ channelData, onBack, onLeagueFeatures, onDataTest }) => {
           'negative': 2,
           'toxic': 3
         }[sentiment]
-        
+
         if (sentimentIndex !== undefined) {
           newDatasets[sentimentIndex].data[currentIndex]++
         }
       }
-      
+
       return {
         labels: newLabels,
         datasets: newDatasets
@@ -260,21 +260,21 @@ const Dashboard = ({ channelData, onBack, onLeagueFeatures, onDataTest }) => {
 
   const filteredMessages = recentMessages.filter(msg => {
     // Apply search filter
-    if (searchFilter && !msg.message.toLowerCase().includes(searchFilter.toLowerCase()) && 
-        !msg.username.toLowerCase().includes(searchFilter.toLowerCase())) {
+    if (searchFilter && !msg.message.toLowerCase().includes(searchFilter.toLowerCase()) &&
+      !msg.username.toLowerCase().includes(searchFilter.toLowerCase())) {
       return false
     }
-    
+
     // Apply sentiment filter
     if (sentimentFilter !== 'all' && msg.sentiment !== sentimentFilter) {
       return false
     }
-    
+
     // Filter blocked users
     if (blockedUsers.has(msg.username)) {
       return false
     }
-    
+
     return true
   })
 
@@ -364,9 +364,6 @@ const Dashboard = ({ channelData, onBack, onLeagueFeatures, onDataTest }) => {
           <button onClick={onLeagueFeatures} className="league-button">
             🎮 League Features
           </button>
-          <button onClick={onDataTest} className="league-button">
-            🧪 Data Test
-          </button>
           <div className="channel-info">
             <h1>Monitoring: {channelData.name}</h1>
             <div className="connection-status">
@@ -412,7 +409,7 @@ const Dashboard = ({ channelData, onBack, onLeagueFeatures, onDataTest }) => {
               <h4>Most Active Users</h4>
               <div className="user-list">
                 {Array.from(advancedStats.mostActiveUsers.entries())
-                  .sort(([,a], [,b]) => b - a)
+                  .sort(([, a], [, b]) => b - a)
                   .slice(0, 5)
                   .map(([username, count]) => (
                     <div key={username} className="user-stat">
@@ -422,7 +419,7 @@ const Dashboard = ({ channelData, onBack, onLeagueFeatures, onDataTest }) => {
                   ))}
               </div>
             </div>
-            
+
             <div className="stat-box">
               <h4>Top Emotions</h4>
               <div className="emotion-list">
@@ -434,7 +431,7 @@ const Dashboard = ({ channelData, onBack, onLeagueFeatures, onDataTest }) => {
                 ))}
               </div>
             </div>
-            
+
             <div className="stat-box">
               <h4>Session Stats</h4>
               <div className="session-stats">
@@ -468,7 +465,7 @@ const Dashboard = ({ channelData, onBack, onLeagueFeatures, onDataTest }) => {
               <div className="stat-change positive-change">+5%</div>
             </div>
           </div>
-          
+
           <div className="top-stat-card toxic">
             <div className="stat-icon">
               <div className="pulse-icon toxic-pulse">⚠️</div>
@@ -479,7 +476,7 @@ const Dashboard = ({ channelData, onBack, onLeagueFeatures, onDataTest }) => {
               <div className="stat-change negative-change">-8%</div>
             </div>
           </div>
-          
+
           <div className="top-stat-card active">
             <div className="stat-icon">
               <div className="pulse-icon active-pulse">👥</div>
@@ -522,7 +519,7 @@ const Dashboard = ({ channelData, onBack, onLeagueFeatures, onDataTest }) => {
               >
                 🛡️ Moderation
               </button>
-              <button 
+              <button
                 onClick={toggleDemoMessages}
                 className={`control-btn ${demoRunning ? 'active' : ''}`}
               >
@@ -539,7 +536,7 @@ const Dashboard = ({ channelData, onBack, onLeagueFeatures, onDataTest }) => {
           <div className="chart-card sentiment-timeline">
             <h3>Sentiment Timeline</h3>
             <div className="chart-container">
-              <Line 
+              <Line
                 data={timelineData}
                 options={{
                   responsive: true,
@@ -577,11 +574,11 @@ const Dashboard = ({ channelData, onBack, onLeagueFeatures, onDataTest }) => {
               />
             </div>
           </div>
-          
+
           <div className="chart-card">
             <h3>Sentiment Distribution</h3>
             <div className="chart-container">
-              <Doughnut 
+              <Doughnut
                 data={sentimentChartData}
                 options={{
                   responsive: true,
@@ -600,11 +597,11 @@ const Dashboard = ({ channelData, onBack, onLeagueFeatures, onDataTest }) => {
               />
             </div>
           </div>
-          
+
           <div className="chart-card">
             <h3>Emotion Analysis</h3>
             <div className="chart-container">
-              <Bar 
+              <Bar
                 data={emotionChartData}
                 options={{
                   responsive: true,
@@ -613,11 +610,11 @@ const Dashboard = ({ channelData, onBack, onLeagueFeatures, onDataTest }) => {
                     legend: { display: false }
                   },
                   scales: {
-                    x: { 
+                    x: {
                       ticks: { color: '#c4b5fd' },
                       grid: { color: 'rgba(196, 181, 253, 0.1)' }
                     },
-                    y: { 
+                    y: {
                       ticks: { color: '#c4b5fd' },
                       grid: { color: 'rgba(196, 181, 253, 0.1)' }
                     }
@@ -657,15 +654,15 @@ const Dashboard = ({ channelData, onBack, onLeagueFeatures, onDataTest }) => {
             <div className="messages-container">
               {filteredMessages.length === 0 ? (
                 <div className="no-messages">
-                  {searchFilter || sentimentFilter !== 'all' ? 'No messages match your filters' : 
-                   isConnected ? 'Waiting for messages...' : 'Connecting to chat...'}
+                  {searchFilter || sentimentFilter !== 'all' ? 'No messages match your filters' :
+                    isConnected ? 'Waiting for messages...' : 'Connecting to chat...'}
                 </div>
               ) : (
                 filteredMessages.map(message => (
                   <div key={message.id} className={`message-item ${message.sentiment} ${blockedUsers.has(message.username) ? 'blocked' : ''}`}>
                     <div className="message-header">
                       <span className="username">{message.username}</span>
-                      <span 
+                      <span
                         className="sentiment-badge"
                         style={{ backgroundColor: getSentimentColor(message.sentiment) }}
                       >
@@ -682,7 +679,7 @@ const Dashboard = ({ channelData, onBack, onLeagueFeatures, onDataTest }) => {
                       {showModeration && (
                         <div className="moderation-controls">
                           {blockedUsers.has(message.username) ? (
-                            <button 
+                            <button
                               onClick={() => unblockUser(message.username)}
                               className="unblock-btn"
                               title="Unblock user"
@@ -690,7 +687,7 @@ const Dashboard = ({ channelData, onBack, onLeagueFeatures, onDataTest }) => {
                               🔓
                             </button>
                           ) : (
-                            <button 
+                            <button
                               onClick={() => blockUser(message.username)}
                               className="block-btn"
                               title="Block user"
