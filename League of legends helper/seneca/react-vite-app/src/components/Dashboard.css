@@ -708,8 +708,8 @@
 }
 
 .charts-section {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
+  display: flex;
+  justify-content: center;
   gap: 2rem;
   margin-bottom: 2rem;
 }
