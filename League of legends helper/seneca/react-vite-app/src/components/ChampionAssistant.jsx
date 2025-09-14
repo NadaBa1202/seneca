@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import LeagueDataService from '../services/LeagueDataService'
+import DynamicItemService from '../services/DynamicItemService'
+import Chatbot from './Chatbot'
 import './ChampionAssistant.css'
 
 const ChampionAssistant = () => {
@@ -9,8 +11,11 @@ const ChampionAssistant = () => {
   const [selectedChampion, setSelectedChampion] = useState(null)
   const [loading, setLoading] = useState(true)
   const [showSuggestions, setShowSuggestions] = useState(false)
+  const [dynamicBuilds, setDynamicBuilds] = useState(null)
+  const [buildLoading, setBuildLoading] = useState(false)
   const searchRef = useRef(null)
   const dataService = new LeagueDataService()
+  const itemService = new DynamicItemService()
 
   const loadChampions = async () => {
     try {
@@ -45,8 +50,14 @@ const ChampionAssistant = () => {
   const handleChampionSelect = async (championId) => {
     try {
       setLoading(true)
+      setBuildLoading(true)
       const champion = await dataService.getChampion(championId)
       const championName = champion.name || championId
+      
+      // Load dynamic item builds
+      const builds = await itemService.getDynamicBuildRecommendations(champion)
+      setDynamicBuilds(builds)
+      setBuildLoading(false)
       
       // Enhanced champion data with tips and strategies
       const enhancedChampion = {
@@ -64,6 +75,7 @@ const ChampionAssistant = () => {
     } catch (error) {
       console.error('Error loading champion:', error)
       setLoading(false)
+      setBuildLoading(false)
     }
   }
 
@@ -374,28 +386,83 @@ const ChampionAssistant = () => {
                 </ul>
               </div>
 
-              {/* Item Builds */}
+              {/* Dynamic Item Builds */}
               <div className="builds-section">
-                <h3>🛠️ Recommended Builds</h3>
-                {Object.entries(selectedChampion.itemBuilds).map(([role, build]) => (
-                  <div key={role} className="build-role">
-                    <h4>{role.charAt(0).toUpperCase() + role.slice(1)}</h4>
-                    <div className="build-items">
-                      <div className="item-category">
-                        <span className="category-label">Core Items:</span>
-                        <div className="items">{build.core.join(', ')}</div>
+                <h3>🛠️ Dynamic Item Builds</h3>
+                {buildLoading ? (
+                  <div className="build-loading">Loading optimized builds...</div>
+                ) : dynamicBuilds ? (
+                  <div className="dynamic-builds">
+                    <div className="build-path">
+                      <h4>🚀 Starter Items</h4>
+                      <div className="build-items">
+                        <div className="items">{dynamicBuilds.starter.join(', ')}</div>
                       </div>
-                      <div className="item-category">
-                        <span className="category-label">Boots:</span>
-                        <div className="items">{build.boots}</div>
+                    </div>
+                    
+                    <div className="build-path">
+                      <h4>⚡ Core Build</h4>
+                      <div className="build-items">
+                        <div className="items">{dynamicBuilds.core.join(' → ')}</div>
                       </div>
-                      <div className="item-category">
-                        <span className="category-label">Situational:</span>
-                        <div className="items">{build.situational.join(', ')}</div>
+                    </div>
+                    
+                    <div className="build-path">
+                      <h4>👟 Boots Options</h4>
+                      <div className="build-items">
+                        <div className="items">
+                          <strong>{dynamicBuilds.boots.standard}</strong>
+                          {dynamicBuilds.boots.alternatives && (
+                            <span className="alternatives">
+                              {' '} (Alt: {dynamicBuilds.boots.alternatives.join(', ')})
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="build-path">
+                      <h4>🎯 Situational Items</h4>
+                      <div className="situational-builds">
+                        {Object.entries(dynamicBuilds.situational).map(([situation, items]) => (
+                          <div key={situation} className="situation-category">
+                            <span className="situation-label">{situation.charAt(0).toUpperCase() + situation.slice(1)}:</span>
+                            <div className="items">{items.join(', ')}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div className="build-path">
+                      <h4>🏆 Late Game</h4>
+                      <div className="build-items">
+                        <div className="items">{dynamicBuilds.lateGame.join(', ')}</div>
                       </div>
                     </div>
                   </div>
-                ))}
+                ) : (
+                  <div className="fallback-builds">
+                    {Object.entries(selectedChampion.itemBuilds).map(([role, build]) => (
+                      <div key={role} className="build-role">
+                        <h4>{role.charAt(0).toUpperCase() + role.slice(1)}</h4>
+                        <div className="build-items">
+                          <div className="item-category">
+                            <span className="category-label">Core Items:</span>
+                            <div className="items">{build.core.join(', ')}</div>
+                          </div>
+                          <div className="item-category">
+                            <span className="category-label">Boots:</span>
+                            <div className="items">{build.boots}</div>
+                          </div>
+                          <div className="item-category">
+                            <span className="category-label">Situational:</span>
+                            <div className="items">{build.situational.join(', ')}</div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Team Compositions */}
@@ -436,6 +503,9 @@ const ChampionAssistant = () => {
           </div>
         </div>
       )}
+
+      {/* AI Chatbot Integration */}
+      <Chatbot selectedChampion={selectedChampion} />
     </div>
   )
 }
