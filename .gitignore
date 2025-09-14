@@ -1,0 +1,93 @@
+# Dependencies
+node_modules/
+*/node_modules/
+**/node_modules/
+
+# Python virtual environments
+.venv/
+.venv-*/
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+
+# Large data files
+*.csv
+*.zip
+*.tgz
+*.tar.gz
+data_set/
+gaming/
+*.bin
+*.safetensors
+
+# ML Models and large libraries
+pytorch_model.bin
+model.safetensors
+*.lib
+*.dll
+*.so
+
+# Build outputs
+dist/
+build/
+*.map
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Log files
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Environment variables
+.env
+.env.local
+.env.production
+
+# Cache directories
+.cache/
+.parcel-cache/
+
+# Coverage reports
+coverage/
+*.cover
+.nyc_output
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Images (large ones)
+*.jpg
+*.png
+*.gif
+*.bmp
+*.tiff
+img/
+images/
+
+# League of Legends data files
+15.18.1/
+lolpatch_*/
+dragontail-*.tgz
+
+# Package lock files (optional - you might want to keep these)
+# package-lock.json
+# yarn.lock

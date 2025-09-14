@@ -1,0 +1,75 @@
+# Python dependencies for League of Legends Companion App
+
+# Web Framework
+streamlit>=1.28.0
+streamlit-option-menu>=0.3.6
+streamlit-autorefresh>=0.0.6
+
+# Async and HTTP
+aiohttp>=3.8.0
+asyncio-throttle>=1.0.2
+httpx>=0.24.0
+requests>=2.31.0
+
+# Data Processing
+pandas>=2.0.0
+numpy>=1.24.0
+polars>=0.19.0
+pyarrow>=12.0.0
+
+# ML/NLP
+torch>=2.0.0
+transformers>=4.33.0
+sentence-transformers>=2.2.2
+huggingface-hub>=0.16.0
+datasets>=2.14.0
+accelerate>=0.21.0
+
+# Specific Models
+tokenizers>=0.13.3
+safetensors>=0.3.1
+
+# Data Visualization
+plotly>=5.15.0
+altair>=5.0.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Caching and Database
+redis>=4.6.0
+diskcache>=5.6.0
+
+# Configuration and Environment
+python-dotenv>=1.0.0
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+
+# Utilities
+python-dateutil>=2.8.2
+pytz>=2023.3
+tqdm>=4.65.0
+rich>=13.5.0
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-mock>=3.11.0
+pytest-cov>=4.1.0
+
+# Code Quality
+black>=23.7.0
+isort>=5.12.0
+flake8>=6.0.0
+mypy>=1.5.0
+
+# Type Hints
+types-requests>=2.31.0
+types-redis>=4.6.0
+
+# Optional: GPU acceleration
+# torch-audio>=2.0.0  # Uncomment if using audio features
+# torch-vision>=0.15.0  # Uncomment if using image features
+
+# Development
+jupyter>=1.0.0
+ipykernel>=6.25.0

@@ -1,0 +1,1 @@
+"""Esports Analytics Platform package."""

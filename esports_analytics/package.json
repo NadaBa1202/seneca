@@ -1,0 +1,22 @@
+{
+  "name": "esports_analytics",
+  "version": "1.0.0",
+  "description": "A cutting-edge, production-ready esports analytics application featuring advanced AI-powered sentiment analysis, real-time chat processing, intelligent highlight generation, and comprehensive behavioral intelligence.",
+  "main": "league_api_server.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "axios": "^1.12.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0"
+  }
+}

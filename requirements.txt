@@ -1,0 +1,8 @@
+streamlit
+nltk
+detoxify
+torch
+twitchio
+wordcloud
+pydantic
+aiohttp
